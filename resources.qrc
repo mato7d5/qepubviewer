@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>icons/document-open.png</file>
+        <file>icons/application-exit.png</file>
+        <file alias="arrow-left.png">icons/22x22/arrow-left.png</file>
+        <file alias="arrow-right.png">icons/22x22/arrow-right.png</file>
+        <file alias="arrow-left-double.png">icons/22x22/arrow-left-double.png</file>
+        <file alias="arrow-right-double.png">icons/22x22/arrow-right-double.png</file>
+        <file alias="help-about.png">icons/22x22/help-about.png</file>
+        <file alias="arrow-left-double_32.png">icons/arrow-left-double.png</file>
+        <file alias="arrow-left_32.png">icons/arrow-left.png</file>
+        <file alias="arrow-right-double_32.png">icons/arrow-right-double.png</file>
+        <file alias="arrow-right_32.png">icons/arrow-right.png</file>
+        <file alias="help-about_32.png">icons/help-about.png</file>
+    </qresource>
+</RCC>
