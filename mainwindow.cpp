@@ -27,6 +27,7 @@
 #include <QIntValidator>
 #include <QRegExpValidator>
 #include <QDesktopServices>
+#include <QStandardPaths>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "aboutdialog.h"
@@ -173,7 +174,9 @@ void MainWindow::jumpToPage(int page) {
 
 void MainWindow::on_action_Open_triggered()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Open epub file"), "/home/mato", tr("Epub files (*.epub)"));
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open epub file"), \
+                                                    QStandardPaths::writableLocation(QStandardPaths::HomeLocation), \
+                                                    tr("Epub files (*.epub)"));
 
     if (!fileName.isEmpty()) {
         mFileName = std::move(fileName);
