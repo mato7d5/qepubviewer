@@ -28,6 +28,9 @@
 #include <QRegExpValidator>
 #include <QDesktopServices>
 #include <QStandardPaths>
+#include <QDockWidget>
+#include <QTreeWidgetItem>
+#include <QList>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "aboutdialog.h"
@@ -42,6 +45,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    //navigation buttons
     mPrevPageBtn = new QPushButton(this);
     mNextPageBtn = new QPushButton(this);
     mFirstPageBtn = new QPushButton(this);
@@ -79,6 +83,25 @@ MainWindow::MainWindow(QWidget *parent) :
 
     mWebPage.setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
     connect(&mWebPage, SIGNAL(linkClicked(const QUrl&)), this, SLOT(urlClicked(const QUrl&)));
+
+    ui->mainToolBar->setMovable(false);
+    ui->mainToolBar->setFloatable(false);
+
+    mLeftToolBar = new QToolBar(this);
+    mLeftToolBar->setFloatable(false);
+    mLeftToolBar->setMovable(false);
+
+    mContentLeftBtn = new QPushButton(mLeftToolBar);
+    mContentLeftBtn->setIcon(QIcon(":/icons/content-icon.png"));
+    mContentLeftBtn->setIconSize(QSize(22, 22));
+    mContentLeftBtn->setEnabled(false);
+    connect(mContentLeftBtn, SIGNAL(clicked()), this, SLOT(on_action_Content_triggered()));
+
+    mLeftToolBar->addWidget(mContentLeftBtn);
+    addToolBar(Qt::LeftToolBarArea, mLeftToolBar);
+
+    mContentTree = nullptr;
+    mContentDock = nullptr;
 
     enableStatusBarControls();
 
@@ -193,12 +216,16 @@ void MainWindow::on_action_Open_triggered()
                 jumpToPage(1);
 
                 setWindowTitle(QString("QEpubViewer - %1").arg(mFileName));
+                mContentLeftBtn->setEnabled(true);
+                ui->action_Content->setEnabled(true);
             }
         }
         catch (EpubException& ex) {
             setWindowTitle("QEpubViewer");
             mPagesEdit->setText("/");
             mPagesEdit->setEnabled(false);
+            mContentLeftBtn->setEnabled(false);
+            ui->action_Content->setEnabled(false);
 
             QMessageBox::critical(this, tr("Error"), ex.what(), QMessageBox::Ok);
             return;
@@ -288,4 +315,51 @@ void MainWindow::on_action_About_triggered()
 {
     AboutDialog dlg(this);
     dlg.exec();
+}
+
+void MainWindow::on_action_Content_triggered()
+{
+    contentControl(!ui->action_Content->isChecked());
+}
+
+void MainWindow::contentControl(bool show) {
+    if (mContentDock == nullptr) {
+        mContentDock = new QDockWidget(QString::fromUtf8("Content"), this);
+        QList<QTreeWidgetItem*> contentItems;
+        mContentTree = new QTreeWidget(mContentDock);
+
+        mContentDock->setAllowedAreas(Qt::LeftDockWidgetArea);
+        mContentTree->setColumnCount(1);
+        mContentTree->setSortingEnabled(false);
+
+        QTreeWidgetItem* contentItem = nullptr;
+        for (const auto& item : mEpubDocument->contentMap()) {
+            QString title = item.first;
+            QString url = item.second;
+
+            if (url.contains("#") == false) {
+                contentItem = new QTreeWidgetItem(mContentTree, QStringList(title));
+                contentItems.append(contentItem);
+            }
+            else {
+                if (!contentItems.isEmpty()) {
+                    QTreeWidgetItem* subContentItem = new QTreeWidgetItem(contentItem, QStringList(title));
+                    contentItems.append(subContentItem);
+                }
+            }
+        }
+
+        mContentTree->insertTopLevelItems(0, contentItems);
+        mContentDock->setWidget(mContentTree);
+        addDockWidget(Qt::LeftDockWidgetArea, mContentDock);
+    }
+
+    if (show) {
+        mContentDock->show();
+        ui->action_Content->setChecked(true);
+    }
+    else {
+        mContentDock->hide();
+        ui->action_Content->setChecked(false);
+    }
 }

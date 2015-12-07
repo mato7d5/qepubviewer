@@ -28,6 +28,19 @@ EpubDocument::EpubDocument(const QString fileName, QObject *parent) :
     if (mEpub == nullptr)
         throw EpubException(QString("Cannot get epub information about %1").arg(mFileName));
 
+    extractPages();
+    extractContent();
+}
+
+EpubDocument::~EpubDocument() {
+    if (mEpub)
+        epub_close(mEpub);
+
+    epub_cleanup();
+}
+
+void EpubDocument::extractPages()
+{
     eiterator* it = epub_get_iterator(mEpub, EITERATOR_SPINE, 0);
 
     QString pageContent;
@@ -56,9 +69,19 @@ EpubDocument::EpubDocument(const QString fileName, QObject *parent) :
     epub_free_iterator(it);
 }
 
-EpubDocument::~EpubDocument() {
-    if (mEpub)
-        epub_close(mEpub);
+void EpubDocument::extractContent() {
+    titerator* tit = epub_get_titerator(mEpub, TITERATOR_NAVMAP, 0);
 
-    epub_cleanup();
+    if (tit != nullptr) {
+        do {
+            QString title = epub_tit_get_curr_label(tit);
+            QString url = epub_tit_get_curr_link(tit);
+
+            std::pair<QString, QString> item(title, url);
+            mContentMap.push_back(item);
+
+        } while (epub_tit_next(tit));
+
+        epub_free_titerator(tit);
+    }
 }

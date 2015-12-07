@@ -24,7 +24,10 @@
 #include <QList>
 #include <epub.h>
 #include <map>
+#include <vector>
 #include "epubpage.h"
+
+using ContentMap = std::vector<std::pair<QString, QString> >;
 
 class EpubDocument : public QObject
 {
@@ -34,6 +37,10 @@ private:
     QString mFileName;
     QList<EpubPage> mPages;
     std::map<QString, int> mPageUrlMap;
+    ContentMap mContentMap;
+
+    void extractPages();
+    void extractContent();
 
 public:
     explicit EpubDocument(const QString fileName, QObject *parent = 0);
@@ -44,6 +51,7 @@ public:
     const EpubPage& page(int index) { return mPages[index]; }
     epub* epubdata() const { return mEpub; }
     const std::map<QString, int>& pageUrlMap() const { return mPageUrlMap; }
+    const ContentMap& contentMap() const { return mContentMap; }
 
 signals:
 

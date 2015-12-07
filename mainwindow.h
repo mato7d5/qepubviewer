@@ -24,6 +24,9 @@
 #include <QPushButton>
 #include <QLineEdit>
 #include <QString>
+#include <QToolBar>
+#include <QTreeWidget>
+#include <QDockWidget>
 #include <epubdocument.h>
 #include <memory>
 #include "epubnetworkmanager.h"
@@ -45,8 +48,15 @@ private:
     QPushButton* mNextPageBtn;
     QPushButton* mFirstPageBtn;
     QPushButton* mLastPageBtn;
+    QPushButton* mContentLeftBtn;
     QLineEdit* mPagesEdit;
     std::unique_ptr<EpubNetworkManager> mNetworkManager;
+    QToolBar* mLeftToolBar;
+    QDockWidget* mContentDock;
+
+    //content
+    QTreeWidget* mContentTree;
+    void contentControl(bool show);
 
     void enableStatusBarControls();
     void jumpToPage(int page);
@@ -64,8 +74,8 @@ private slots:
     void on_action_Previous_Page_triggered();
     void pageNumber_entered();
     void urlClicked(const QUrl& url);
-
     void on_action_About_triggered();
+    void on_action_Content_triggered();
 
 private:
     Ui::MainWindow *ui;
