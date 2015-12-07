@@ -53,6 +53,7 @@ private:
     std::unique_ptr<EpubNetworkManager> mNetworkManager;
     QToolBar* mLeftToolBar;
     QDockWidget* mContentDock;
+    bool mContentDockShow;
 
     //content
     QTreeWidget* mContentTree;

@@ -102,6 +102,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     mContentTree = nullptr;
     mContentDock = nullptr;
+    mContentDockShow = false;
 
     enableStatusBarControls();
 
@@ -319,7 +320,7 @@ void MainWindow::on_action_About_triggered()
 
 void MainWindow::on_action_Content_triggered()
 {
-    contentControl(!ui->action_Content->isChecked());
+    contentControl(!mContentDockShow);
 }
 
 void MainWindow::contentControl(bool show) {
@@ -359,10 +360,12 @@ void MainWindow::contentControl(bool show) {
     if (show) {
         mContentDock->show();
         ui->action_Content->setChecked(true);
+        mContentDockShow = true;
     }
     else {
         mContentDock->hide();
         ui->action_Content->setChecked(false);
+        mContentDockShow = false;
     }
 }
 
