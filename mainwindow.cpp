@@ -219,6 +219,7 @@ void MainWindow::on_action_Open_triggered()
                 setWindowTitle(QString("QEpubViewer - %1").arg(mFileName));
                 mContentLeftBtn->setEnabled(true);
                 ui->action_Content->setEnabled(true);
+                ui->action_Close->setEnabled(true);
             }
         }
         catch (EpubException& ex) {
@@ -227,6 +228,7 @@ void MainWindow::on_action_Open_triggered()
             mPagesEdit->setEnabled(false);
             mContentLeftBtn->setEnabled(false);
             ui->action_Content->setEnabled(false);
+            ui->action_Close->setEnabled(false);
 
             QMessageBox::critical(this, tr("Error"), ex.what(), QMessageBox::Ok);
             return;
@@ -383,4 +385,25 @@ void MainWindow::contentItemClick(QTreeWidgetItem* item, int column) {
     }
 
     emit mWebPage.linkClicked(url);
+}
+
+void MainWindow::on_action_Close_triggered()
+{
+    ui->mWebView->close();
+    if (mContentDock) {
+        mContentDock->hide();
+        delete mContentDock;
+        mContentDock = nullptr;
+    }
+
+    mEpubDocument.reset();
+    mEpubDocument = nullptr;
+    setWindowTitle("QEpubViewer");
+    enableStatusBarControls();
+    ui->action_Close->setEnabled(false);
+    ui->action_Content->setChecked(false);
+    ui->action_Content->setEnabled(false);
+    mContentLeftBtn->setEnabled(false);
+    mCurrentPage = 0;
+    mContentDockShow = false;
 }

@@ -47,6 +47,7 @@
     </property>
     <addaction name="action_Open"/>
     <addaction name="separator"/>
+    <addaction name="action_Close"/>
     <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menu_About">
@@ -96,6 +97,9 @@
    </property>
   </widget>
   <action name="action_Open">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset>
      <normalon>:/icons/icons/document-open.png</normalon>
@@ -175,6 +179,18 @@
    </property>
    <property name="text">
     <string>&amp;Content</string>
+   </property>
+  </action>
+  <action name="action_Close">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/document-close.png</normaloff>:/icons/document-close.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Close</string>
    </property>
   </action>
  </widget>

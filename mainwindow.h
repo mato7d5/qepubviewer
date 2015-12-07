@@ -78,6 +78,8 @@ private slots:
     void on_action_About_triggered();
     void on_action_Content_triggered();
     void contentItemClick(QTreeWidgetItem* item, int column);
+    void on_action_Close_triggered();
+
 private:
     Ui::MainWindow *ui;
 };
