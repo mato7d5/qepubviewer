@@ -354,6 +354,7 @@ void MainWindow::contentControl(bool show) {
         mContentTree->setHeaderLabel("Chapters");
         connect(mContentTree, SIGNAL(itemClicked(QTreeWidgetItem*,int)), this, SLOT(contentItemClick(QTreeWidgetItem*,int)));
         mContentDock->setWidget(mContentTree);
+        mContentDock->setFeatures(QDockWidget::NoDockWidgetFeatures);
         addDockWidget(Qt::LeftDockWidgetArea, mContentDock);
     }
 
