@@ -76,7 +76,7 @@ private slots:
     void urlClicked(const QUrl& url);
     void on_action_About_triggered();
     void on_action_Content_triggered();
-
+    void contentItemClick(QTreeWidgetItem* item, int column);
 private:
     Ui::MainWindow *ui;
 };

@@ -350,6 +350,8 @@ void MainWindow::contentControl(bool show) {
         }
 
         mContentTree->insertTopLevelItems(0, contentItems);
+        mContentTree->setHeaderLabel("Chapters");
+        connect(mContentTree, SIGNAL(itemClicked(QTreeWidgetItem*,int)), this, SLOT(contentItemClick(QTreeWidgetItem*,int)));
         mContentDock->setWidget(mContentTree);
         addDockWidget(Qt::LeftDockWidgetArea, mContentDock);
     }
@@ -362,4 +364,19 @@ void MainWindow::contentControl(bool show) {
         mContentDock->hide();
         ui->action_Content->setChecked(false);
     }
+}
+
+void MainWindow::contentItemClick(QTreeWidgetItem* item, int column) {
+    QString title = item->text(0);
+    QUrl url;
+
+    auto contentMap = mEpubDocument->contentMap();
+    for (const auto& i : contentMap) {
+        if (i.first.compare(title, Qt::CaseInsensitive) == 0) {
+            url = "file://" + i.second;
+            break;
+        }
+    }
+
+    emit mWebPage.linkClicked(url);
 }
