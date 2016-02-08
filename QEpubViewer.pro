@@ -24,7 +24,9 @@ SOURCES += main.cpp\
     epubdocument.cpp \
     epubnetworkmanager.cpp \
     epubnetworkreply.cpp \
-    aboutdialog.cpp
+    aboutdialog.cpp \
+    preferencesdialog.cpp \
+    preferences.cpp
 
 HEADERS  += mainwindow.h \
     epubexception.h \
@@ -32,10 +34,13 @@ HEADERS  += mainwindow.h \
     epubdocument.h \
     epubnetworkmanager.h \
     epubnetworkreply.h \
-    aboutdialog.h
+    aboutdialog.h \
+    preferencesdialog.h \
+    preferences.h
 
 FORMS    += mainwindow.ui \
-    aboutdialog.ui
+    aboutdialog.ui \
+    preferencesdialog.ui
 
 RESOURCES += \
     resources.qrc

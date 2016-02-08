@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2015 by Martin Mancuska                                 *
+ *   Copyright (C) 2015 - 2016 by Martin Mancuska                          *
  *   <martin@borg.sk>                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -34,6 +34,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "aboutdialog.h"
+#include "preferencesdialog.h"
 #include <epubdocument.h>
 #include <epubpage.h>
 #include <epubexception.h>
@@ -44,6 +45,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    QCoreApplication::setOrganizationName("QEpubViewer");
+    QCoreApplication::setApplicationName("QEpubViewer");
 
     //navigation buttons
     mPrevPageBtn = new QPushButton(this);
@@ -406,4 +410,10 @@ void MainWindow::on_action_Close_triggered()
     mContentLeftBtn->setEnabled(false);
     mCurrentPage = 0;
     mContentDockShow = false;
+}
+
+void MainWindow::on_action_Preferences_triggered()
+{
+    PreferencesDialog dlg(mPreferences);
+    dlg.exec();
 }

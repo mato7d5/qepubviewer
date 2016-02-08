@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2015 by Martin Mancuska                                 *
+ *   Copyright (C) 2015 - 2016 by Martin Mancuska                          *
  *   <martin@borg.sk>                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -30,6 +30,7 @@
 #include <epubdocument.h>
 #include <memory>
 #include "epubnetworkmanager.h"
+#include "preferences.h"
 
 namespace Ui {
 class MainWindow;
@@ -55,6 +56,8 @@ private:
     QDockWidget* mContentDock;
     bool mContentDockShow;
 
+    Preferences mPreferences;
+
     //content
     QTreeWidget* mContentTree;
     void contentControl(bool show);
@@ -79,6 +82,7 @@ private slots:
     void on_action_Content_triggered();
     void contentItemClick(QTreeWidgetItem* item, int column);
     void on_action_Close_triggered();
+    void on_action_Preferences_triggered();
 
 private:
     Ui::MainWindow *ui;
