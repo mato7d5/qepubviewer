@@ -18,7 +18,7 @@
 
 #include "preferences.h"
 
-Preferences::Preferences()
+Preferences::Preferences() : mSettings("QEpubViewer", "QEpubViewer")
 {
     loadGeneralSettings();
     loadRecentDocuments();
