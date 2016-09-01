@@ -26,9 +26,28 @@ PreferencesDialog::PreferencesDialog(Preferences& prefs, QWidget *parent) :
     ui(new Ui::PreferencesDialog)
 {
     ui->setupUi(this);
+
+    // load dialog's state
+    ui->mRecentlyUsedCB->setChecked(mPreferences.generalRememberRecent());
+    ui->mNumberRecentlySB->setValue(mPreferences.generalNumberOfRecent());
 }
 
 PreferencesDialog::~PreferencesDialog()
 {
     delete ui;
+}
+
+void PreferencesDialog::on_mRecentlyUsedCB_stateChanged(int state)
+{
+    mPreferences.generalRememberRecent(state == Qt::Checked ? true : false);
+}
+
+void PreferencesDialog::on_buttonBox_accepted()
+{
+    mPreferences.commit();
+}
+
+void PreferencesDialog::on_mNumberRecentlySB_valueChanged(int num)
+{
+    mPreferences.generalNumberOfRecent(num);
 }

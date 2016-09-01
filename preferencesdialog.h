@@ -38,6 +38,11 @@ public:
     explicit PreferencesDialog(Preferences& prefs, QWidget *parent = 0);
     ~PreferencesDialog();
 
+private slots:
+    void on_mRecentlyUsedCB_stateChanged(int state);
+    void on_buttonBox_accepted();
+    void on_mNumberRecentlySB_valueChanged(int num);
+
 private:
     Ui::PreferencesDialog *ui;
 };

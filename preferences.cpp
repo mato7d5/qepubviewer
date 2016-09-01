@@ -25,6 +25,14 @@ Preferences::Preferences()
 }
 
 //methods
+void Preferences::commit(bool full) {
+    mSettings.setValue(GENERAL_REMEMBER_RECENT, mGeneral.rememberRecent);
+    mSettings.setValue(GENERAL_NUMBER_OF_RECENT, mGeneral.numberOfRecent);
+
+    if (full)
+        writeRecentFiles();
+}
+
 void Preferences::loadGeneralSettings() {
     mGeneral.numberOfRecent = mSettings.value(GENERAL_NUMBER_OF_RECENT, 5).toInt();
     mGeneral.rememberRecent = mSettings.value(GENERAL_REMEMBER_RECENT, false).toBool();
@@ -47,12 +55,7 @@ void Preferences::loadRecentDocuments() {
     mSettings.endArray();
 }
 
-void Preferences::addRecentFile(const QString& file) {
-    while (mGeneral.numberOfRecent <= mRecentFiles.size())
-        mRecentFiles.removeFirst();
-
-    mRecentFiles.push_back(file);
-
+void Preferences::writeRecentFiles() {
     mSettings.remove(RECENT_DOCUMENTS);
     mSettings.beginWriteArray(RECENT_DOCUMENTS);
     for (int i = 0; i < mRecentFiles.size(); ++i) {
@@ -61,4 +64,11 @@ void Preferences::addRecentFile(const QString& file) {
     }
 
     mSettings.endArray();
+}
+
+void Preferences::addRecentFile(const QString& file) {
+    while (mGeneral.numberOfRecent <= mRecentFiles.size())
+        mRecentFiles.removeFirst();
+
+    mRecentFiles.push_back(file);
 }

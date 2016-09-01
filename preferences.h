@@ -41,9 +41,12 @@ private:
 
     void loadGeneralSettings();
     void loadRecentDocuments();
+    void writeRecentFiles();
 
 public:
     Preferences();
+
+    void commit(bool full = false);
 
     // General settings
     bool generalRememberRecent() const { return mGeneral.rememberRecent; }
