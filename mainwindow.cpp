@@ -340,13 +340,26 @@ void MainWindow::contentControl(bool show) {
         mContentTree->setSortingEnabled(false);
 
         QTreeWidgetItem* contentItem = nullptr;
+        QString parentUrl;
+
         for (const auto& item : mEpubDocument->contentMap()) {
             QString title = item.first;
             QString url = item.second;
+            bool isChild = url.contains("#");
 
-            if (url.contains("#") == false) {
+            if (!isChild && parentUrl.length() > 0) {
+                int dotIdx = parentUrl.indexOf('.');
+                if (dotIdx > 0) {
+                    QString parentChapter = parentUrl.mid(0, dotIdx);
+                    if (url.startsWith(parentChapter))
+                        isChild = true;
+                 }
+            }
+
+            if (!isChild) {
                 contentItem = new QTreeWidgetItem(mContentTree, QStringList(title));
                 contentItems.append(contentItem);
+                parentUrl = std::move(url);
             }
             else {
                 if (!contentItems.isEmpty()) {
