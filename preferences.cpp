@@ -24,6 +24,10 @@ Preferences::Preferences() : mSettings("QEpubViewer", "QEpubViewer")
     loadRecentDocuments();
 }
 
+Preferences::~Preferences() {
+    commit(true);
+}
+
 //methods
 void Preferences::commit(bool full) {
     mSettings.setValue(GENERAL_REMEMBER_RECENT, mGeneral.rememberRecent);

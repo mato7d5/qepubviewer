@@ -27,7 +27,7 @@
 #define RECENT_DOCUMENTS            "RecentDocuments"
 #define RECENT_DOCUMENTS_FILE       "File"
 
-class Preferences
+class Preferences final
 {
 private:
     QSettings mSettings;
@@ -45,6 +45,7 @@ private:
 
 public:
     Preferences();
+    ~Preferences();
 
     void commit(bool full = false);
 

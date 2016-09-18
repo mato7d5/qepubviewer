@@ -237,6 +237,9 @@ void MainWindow::on_action_Open_triggered()
             QMessageBox::critical(this, tr("Error"), ex.what(), QMessageBox::Ok);
             return;
         }
+
+        if (mPreferences.generalRememberRecent())
+            mPreferences.addRecentFile(mFileName);
     }
 }
 
