@@ -31,6 +31,7 @@
 #include <QDockWidget>
 #include <QTreeWidgetItem>
 #include <QList>
+#include <QMenu>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "aboutdialog.h"
@@ -110,12 +111,64 @@ MainWindow::MainWindow(QWidget *parent) :
 
     enableStatusBarControls();
 
+    //recent files
+    QMenu* recentFilesMenu = new QMenu(ui->menu_File);
+    recentFilesMenu->setTitle(tr("&Recent Files"));
+    ui->menu_File->insertMenu(ui->action_Close, recentFilesMenu);
+
+    if (mPreferences.generalRememberRecent()) {
+        for (const QString& file : mPreferences.recentFiles()) {
+            QAction* action = recentFilesMenu->addAction(file);
+            connect(recentFilesMenu, SIGNAL(triggered(QAction*)), this, SLOT(recentFilesActionSlot(QAction*)));
+        }
+    }
+    else
+        recentFilesMenu->setEnabled(false);
+
     showMaximized();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::openFile(const QString& fileName) {
+    if (!fileName.isEmpty()) {
+        mFileName = fileName;
+        try {
+            if (mEpubDocument.get())
+                mEpubDocument.reset(new EpubDocument(mFileName));
+            else
+                mEpubDocument = std::make_unique<EpubDocument> (mFileName);
+
+            int pagesNum = mEpubDocument->numOfPages();
+            if (pagesNum > 0) {
+                mNetworkManager->setEpub(mEpubDocument->epubdata());
+
+                jumpToPage(1);
+
+                setWindowTitle(QString("QEpubViewer - %1").arg(mFileName));
+                mContentLeftBtn->setEnabled(true);
+                ui->action_Content->setEnabled(true);
+                ui->action_Close->setEnabled(true);
+            }
+        }
+        catch (EpubException& ex) {
+            setWindowTitle("QEpubViewer");
+            mPagesEdit->setText("/");
+            mPagesEdit->setEnabled(false);
+            mContentLeftBtn->setEnabled(false);
+            ui->action_Content->setEnabled(false);
+            ui->action_Close->setEnabled(false);
+
+            QMessageBox::critical(this, tr("Error"), ex.what(), QMessageBox::Ok);
+            return;
+        }
+
+        if (mPreferences.generalRememberRecent())
+            mPreferences.addRecentFile(mFileName);
+    }
 }
 
 void MainWindow::enableStatusBarControls() {
@@ -206,41 +259,7 @@ void MainWindow::on_action_Open_triggered()
                                                     QStandardPaths::writableLocation(QStandardPaths::HomeLocation), \
                                                     tr("Epub files (*.epub)"));
 
-    if (!fileName.isEmpty()) {
-        mFileName = std::move(fileName);
-        try {
-            if (mEpubDocument.get())
-                mEpubDocument.reset(new EpubDocument(mFileName));
-            else
-                mEpubDocument = std::make_unique<EpubDocument> (mFileName);
-
-            int pagesNum = mEpubDocument->numOfPages();
-            if (pagesNum > 0) {
-                mNetworkManager->setEpub(mEpubDocument->epubdata());
-
-                jumpToPage(1);
-
-                setWindowTitle(QString("QEpubViewer - %1").arg(mFileName));
-                mContentLeftBtn->setEnabled(true);
-                ui->action_Content->setEnabled(true);
-                ui->action_Close->setEnabled(true);
-            }
-        }
-        catch (EpubException& ex) {
-            setWindowTitle("QEpubViewer");
-            mPagesEdit->setText("/");
-            mPagesEdit->setEnabled(false);
-            mContentLeftBtn->setEnabled(false);
-            ui->action_Content->setEnabled(false);
-            ui->action_Close->setEnabled(false);
-
-            QMessageBox::critical(this, tr("Error"), ex.what(), QMessageBox::Ok);
-            return;
-        }
-
-        if (mPreferences.generalRememberRecent())
-            mPreferences.addRecentFile(mFileName);
-    }
+    openFile(fileName);
 }
 
 void MainWindow::on_actionQuit_triggered()
@@ -432,4 +451,11 @@ void MainWindow::on_action_Preferences_triggered()
 {
     PreferencesDialog dlg(mPreferences);
     dlg.exec();
+}
+
+void MainWindow::recentFilesActionSlot(QAction* action) {
+    if (action) {
+        const QString& fileName = action->text();
+        openFile(fileName);
+    }
 }

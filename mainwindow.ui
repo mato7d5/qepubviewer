@@ -209,6 +209,11 @@
     <string>&amp;Preferences</string>
    </property>
   </action>
+  <action name="action_Recent_Files">
+   <property name="text">
+    <string>&amp;Recent Files</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>

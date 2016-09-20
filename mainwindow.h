@@ -62,6 +62,8 @@ private:
     QTreeWidget* mContentTree;
     void contentControl(bool show);
 
+    void openFile(const QString& fileName);
+
     void enableStatusBarControls();
     void jumpToPage(int page);
 
@@ -83,6 +85,7 @@ private slots:
     void contentItemClick(QTreeWidgetItem* item, int column);
     void on_action_Close_triggered();
     void on_action_Preferences_triggered();
+    void recentFilesActionSlot(QAction* action);
 
 private:
     Ui::MainWindow *ui;
