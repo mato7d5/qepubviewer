@@ -71,6 +71,10 @@ void Preferences::writeRecentFiles() {
 }
 
 void Preferences::addRecentFile(const QString& file) {
+    for (const auto& f : recentFiles())
+        if (f == file)
+            return;
+
     while (mGeneral.numberOfRecent <= mRecentFiles.size())
         mRecentFiles.removeFirst();
 
