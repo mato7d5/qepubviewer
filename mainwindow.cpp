@@ -445,6 +445,8 @@ void MainWindow::on_action_Close_triggered()
     mContentLeftBtn->setEnabled(false);
     mCurrentPage = 0;
     mContentDockShow = false;
+
+    mPreferences.commit(true);
 }
 
 void MainWindow::on_action_Preferences_triggered()
