@@ -118,7 +118,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     if (mPreferences.generalRememberRecent()) {
         for (const QString& file : mPreferences.recentFiles()) {
-            QAction* action = recentFilesMenu->addAction(file);
+            recentFilesMenu->addAction(file);
             connect(recentFilesMenu, SIGNAL(triggered(QAction*)), this, SLOT(recentFilesActionSlot(QAction*)));
         }
     }
