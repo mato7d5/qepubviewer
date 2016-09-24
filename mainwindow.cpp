@@ -116,14 +116,20 @@ MainWindow::MainWindow(QWidget *parent) :
     recentFilesMenu->setTitle(tr("&Recent Files"));
     ui->menu_File->insertMenu(ui->action_Close, recentFilesMenu);
 
+    QAction* lastRFAction = nullptr;
     if (mPreferences.generalRememberRecent()) {
         for (const QString& file : mPreferences.recentFiles()) {
-            recentFilesMenu->addAction(file);
+            lastRFAction = recentFilesMenu->addAction(file);
             connect(recentFilesMenu, SIGNAL(triggered(QAction*)), this, SLOT(recentFilesActionSlot(QAction*)));
         }
+
+        ui->menu_File->insertSeparator(lastRFAction);
     }
     else
         recentFilesMenu->setEnabled(false);
+
+    QMenu* clearRFMenu = new QMenu(recentFilesMenu);
+    clearRFMenu->setTitle(tr("&Clear List"));
 
     showMaximized();
 }

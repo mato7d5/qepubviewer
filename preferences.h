@@ -58,6 +58,7 @@ public:
     //Recent files
     QStringList recentFiles() const { return mRecentFiles; }
     void addRecentFile(const QString& file);
+    void clearRecentFiles();
 };
 
 #endif // PREFERENCES_H

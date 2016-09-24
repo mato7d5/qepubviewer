@@ -80,3 +80,7 @@ void Preferences::addRecentFile(const QString& file) {
 
     mRecentFiles.push_front(file);
 }
+
+void Preferences::clearRecentFiles() {
+    mRecentFiles.clear();
+}
