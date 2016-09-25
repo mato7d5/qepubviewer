@@ -54,6 +54,7 @@ private:
     std::unique_ptr<EpubNetworkManager> mNetworkManager;
     QToolBar* mLeftToolBar;
     QDockWidget* mContentDock;
+    QAction*  mClearRFList;
     bool mContentDockShow;
 
     Preferences mPreferences;
@@ -63,8 +64,8 @@ private:
     void contentControl(bool show);
 
     void openFile(const QString& fileName);
-
     void enableStatusBarControls();
+
     void jumpToPage(int page);
 
 public:
@@ -86,7 +87,7 @@ private slots:
     void on_action_Close_triggered();
     void on_action_Preferences_triggered();
     void recentFilesActionSlot(QAction* action);
-
+    void clearRecentFilesSlot(bool checked);
 private:
     Ui::MainWindow *ui;
 };

@@ -120,7 +120,7 @@ MainWindow::MainWindow(QWidget *parent) :
     if (mPreferences.generalRememberRecent()) {
         for (const QString& file : mPreferences.recentFiles()) {
             lastRFAction = recentFilesMenu->addAction(file);
-            connect(recentFilesMenu, SIGNAL(triggered(QAction*)), this, SLOT(recentFilesActionSlot(QAction*)));
+            connect(recentFilesMenu, SIGNAL(triggered(QAction*)), this, SLOT(recentFilesActionSlot(QAction*))), Qt::UniqueConnection;
         }
 
         ui->menu_File->insertSeparator(lastRFAction);
@@ -128,8 +128,8 @@ MainWindow::MainWindow(QWidget *parent) :
     else
         recentFilesMenu->setEnabled(false);
 
-    QMenu* clearRFMenu = new QMenu(recentFilesMenu);
-    clearRFMenu->setTitle(tr("&Clear List"));
+    mClearRFList = recentFilesMenu->addAction("&Clear list");
+    connect(mClearRFList, SIGNAL(triggered(bool)), this, SLOT(clearRecentFilesSlot(bool)));
 
     showMaximized();
 }
@@ -462,8 +462,12 @@ void MainWindow::on_action_Preferences_triggered()
 }
 
 void MainWindow::recentFilesActionSlot(QAction* action) {
-    if (action) {
+    if (action && action != mClearRFList) {
         const QString& fileName = action->text();
         openFile(fileName);
     }
+}
+
+void MainWindow::clearRecentFilesSlot(bool checked) {
+    mPreferences.clearRecentFiles();
 }
