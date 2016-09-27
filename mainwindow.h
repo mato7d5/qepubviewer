@@ -29,6 +29,7 @@
 #include <QDockWidget>
 #include <epubdocument.h>
 #include <memory>
+#include <QMenu>
 #include "epubnetworkmanager.h"
 #include "preferences.h"
 
@@ -55,6 +56,7 @@ private:
     QToolBar* mLeftToolBar;
     QDockWidget* mContentDock;
     QAction*  mClearRFList;
+    QMenu* mRecentFilesMenu;
     bool mContentDockShow;
 
     Preferences mPreferences;

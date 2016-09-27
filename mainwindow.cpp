@@ -112,23 +112,23 @@ MainWindow::MainWindow(QWidget *parent) :
     enableStatusBarControls();
 
     //recent files
-    QMenu* recentFilesMenu = new QMenu(ui->menu_File);
-    recentFilesMenu->setTitle(tr("&Recent Files"));
-    ui->menu_File->insertMenu(ui->action_Close, recentFilesMenu);
+    mRecentFilesMenu = new QMenu(ui->menu_File);
+    mRecentFilesMenu->setTitle(tr("&Recent Files"));
+    ui->menu_File->insertMenu(ui->action_Close, mRecentFilesMenu);
 
     QAction* lastRFAction = nullptr;
     if (mPreferences.generalRememberRecent()) {
         for (const QString& file : mPreferences.recentFiles()) {
-            lastRFAction = recentFilesMenu->addAction(file);
-            connect(recentFilesMenu, SIGNAL(triggered(QAction*)), this, SLOT(recentFilesActionSlot(QAction*))), Qt::UniqueConnection;
+            lastRFAction = mRecentFilesMenu->addAction(file);
+            connect(mRecentFilesMenu, SIGNAL(triggered(QAction*)), this, SLOT(recentFilesActionSlot(QAction*))), Qt::UniqueConnection;
         }
 
         ui->menu_File->insertSeparator(lastRFAction);
     }
     else
-        recentFilesMenu->setEnabled(false);
+        mRecentFilesMenu->setEnabled(false);
 
-    mClearRFList = recentFilesMenu->addAction("&Clear list");
+    mClearRFList = mRecentFilesMenu->addAction("&Clear list");
     connect(mClearRFList, SIGNAL(triggered(bool)), this, SLOT(clearRecentFilesSlot(bool)));
 
     showMaximized();
@@ -470,4 +470,11 @@ void MainWindow::recentFilesActionSlot(QAction* action) {
 
 void MainWindow::clearRecentFilesSlot(bool checked) {
     mPreferences.clearRecentFiles();
+
+    auto actions = mRecentFilesMenu->actions();
+    for (const auto& action : actions) {
+        if (action != mClearRFList)
+            mRecentFilesMenu->removeAction(action);
+    }
+    mRecentFilesMenu->setEnabled(false);
 }
