@@ -123,7 +123,9 @@ MainWindow::MainWindow(QWidget *parent) :
             connect(mRecentFilesMenu, SIGNAL(triggered(QAction*)), this, SLOT(recentFilesActionSlot(QAction*))), Qt::UniqueConnection;
         }
 
-        ui->menu_File->insertSeparator(lastRFAction);
+        QAction* separator = new QAction(mRecentFilesMenu);
+        separator->setSeparator(true);
+        mRecentFilesMenu->addAction(separator);
     }
     else
         mRecentFilesMenu->setEnabled(false);
