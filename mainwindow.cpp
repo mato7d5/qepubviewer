@@ -116,10 +116,9 @@ MainWindow::MainWindow(QWidget *parent) :
     mRecentFilesMenu->setTitle(tr("&Recent Files"));
     ui->menu_File->insertMenu(ui->action_Close, mRecentFilesMenu);
 
-    QAction* lastRFAction = nullptr;
     if (mPreferences.generalRememberRecent()) {
         for (const QString& file : mPreferences.recentFiles()) {
-            lastRFAction = mRecentFilesMenu->addAction(file);
+            mRecentFilesMenu->addAction(file);
             connect(mRecentFilesMenu, SIGNAL(triggered(QAction*)), this, SLOT(recentFilesActionSlot(QAction*))), Qt::UniqueConnection;
         }
 
