@@ -116,18 +116,7 @@ MainWindow::MainWindow(QWidget *parent) :
     mRecentFilesMenu->setTitle(tr("&Recent Files"));
     ui->menu_File->insertMenu(ui->action_Close, mRecentFilesMenu);
 
-    if (mPreferences.generalRememberRecent()) {
-        for (const QString& file : mPreferences.recentFiles()) {
-            mRecentFilesMenu->addAction(file);
-            connect(mRecentFilesMenu, SIGNAL(triggered(QAction*)), this, SLOT(recentFilesActionSlot(QAction*))), Qt::UniqueConnection;
-        }
-
-        QAction* separator = new QAction(mRecentFilesMenu);
-        separator->setSeparator(true);
-        mRecentFilesMenu->addAction(separator);
-    }
-    else
-        mRecentFilesMenu->setEnabled(false);
+    loadRecentFiles();
 
     mClearRFList = mRecentFilesMenu->addAction("&Clear list");
     connect(mClearRFList, SIGNAL(triggered(bool)), this, SLOT(clearRecentFilesSlot(bool)));
@@ -478,4 +467,20 @@ void MainWindow::clearRecentFilesSlot(bool checked) {
             mRecentFilesMenu->removeAction(action);
     }
     mRecentFilesMenu->setEnabled(false);
+}
+
+void MainWindow::loadRecentFiles() {
+    if (mPreferences.generalRememberRecent()) {
+        for (const QString& file : mPreferences.recentFiles()) {
+            mRecentFilesMenu->addAction(file);
+            connect(mRecentFilesMenu, SIGNAL(triggered(QAction*)), this, SLOT(recentFilesActionSlot(QAction*))), Qt::UniqueConnection;
+        }
+
+        QAction* separator = new QAction(mRecentFilesMenu);
+        separator->setSeparator(true);
+        mRecentFilesMenu->addAction(separator);
+    }
+    else
+        mRecentFilesMenu->setEnabled(false);
+
 }

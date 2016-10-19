@@ -70,6 +70,8 @@ private:
 
     void jumpToPage(int page);
 
+    void loadRecentFiles();
+
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
