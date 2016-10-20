@@ -71,6 +71,7 @@ private:
     void jumpToPage(int page);
 
     void loadRecentFiles();
+    void clearRecentFiles();
 
 public:
     explicit MainWindow(QWidget *parent = 0);

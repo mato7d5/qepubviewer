@@ -162,8 +162,11 @@ void MainWindow::openFile(const QString& fileName) {
             return;
         }
 
-        if (mPreferences.generalRememberRecent())
+        if (mPreferences.generalRememberRecent()) {
             mPreferences.addRecentFile(mFileName);
+            clearRecentFiles();
+            loadRecentFiles();
+        }
     }
 }
 
@@ -460,19 +463,15 @@ void MainWindow::recentFilesActionSlot(QAction* action) {
 
 void MainWindow::clearRecentFilesSlot(bool checked) {
     mPreferences.clearRecentFiles();
-
-    auto actions = mRecentFilesMenu->actions();
-    for (const auto& action : actions) {
-        if (action != mClearRFList)
-            mRecentFilesMenu->removeAction(action);
-    }
+    clearRecentFiles();
     mRecentFilesMenu->setEnabled(false);
 }
 
 void MainWindow::loadRecentFiles() {
     if (mPreferences.generalRememberRecent()) {
         for (const QString& file : mPreferences.recentFiles()) {
-            mRecentFilesMenu->addAction(file);
+            QAction* action = new QAction(file, mRecentFilesMenu);
+            mRecentFilesMenu->insertAction(mClearRFList, action);
             connect(mRecentFilesMenu, SIGNAL(triggered(QAction*)), this, SLOT(recentFilesActionSlot(QAction*))), Qt::UniqueConnection;
         }
 
@@ -483,4 +482,12 @@ void MainWindow::loadRecentFiles() {
     else
         mRecentFilesMenu->setEnabled(false);
 
+}
+
+void MainWindow::clearRecentFiles() {
+    auto actions = mRecentFilesMenu->actions();
+    for (const auto& action : actions) {
+        if (action != mClearRFList)
+            mRecentFilesMenu->removeAction(action);
+    }
 }
