@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2015 - 2016 by Martin Mancuska                          *
+ *   Copyright (C) 2015 - 2017 by Martin Mancuska                          *
  *   <martin@borg.sk>                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -114,6 +114,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //recent files
     mRecentFilesMenu = new QMenu(ui->menu_File);
     mRecentFilesMenu->setTitle(tr("&Recent Files"));
+    mRecentFilesMenu->setIcon(QIcon(":/icons/page-simple.png"));
     ui->menu_File->insertMenu(ui->action_Close, mRecentFilesMenu);
 
     loadRecentFiles();
@@ -471,6 +472,8 @@ void MainWindow::loadRecentFiles() {
     if (mPreferences.generalRememberRecent()) {
         for (const QString& file : mPreferences.recentFiles()) {
             QAction* action = new QAction(file, mRecentFilesMenu);
+            action->setIcon(QIcon(":/icons/page-simple.png"));
+            action->setIconVisibleInMenu(true);
             mRecentFilesMenu->insertAction(mClearRFList, action);
             connect(mRecentFilesMenu, SIGNAL(triggered(QAction*)), this, SLOT(recentFilesActionSlot(QAction*))), Qt::UniqueConnection;
         }

@@ -18,5 +18,6 @@
         <file alias="content-icon_32.png">icons/view-table-of-contents-ltr.png</file>
         <file alias="document-close_32.png">icons/document-close.png</file>
         <file alias="preferences_32.png">icons/preferences.png</file>
+        <file alias="page-simple_32.png">icons/page-simple.png</file>
     </qresource>
 </RCC>
