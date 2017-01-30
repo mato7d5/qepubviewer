@@ -365,27 +365,30 @@ void MainWindow::contentControl(bool show) {
         QString parentUrl;
 
         for (const auto& item : mEpubDocument->contentMap()) {
-            QString title = item.first;
-            QString url = item.second;
-            bool isChild = url.contains("#");
+            unsigned int idx = item.first;
+            auto contentValue = item.second;
+
+            bool isChild = contentValue.url.contains("#");
 
             if (!isChild && parentUrl.length() > 0) {
                 int dotIdx = parentUrl.indexOf('.');
                 if (dotIdx > 0) {
                     QString parentChapter = parentUrl.mid(0, dotIdx);
-                    if (url.startsWith(parentChapter))
+                    if (contentValue.url.startsWith(parentChapter))
                         isChild = true;
                  }
             }
 
             if (!isChild) {
-                contentItem = new QTreeWidgetItem(mContentTree, QStringList(title));
+                contentItem = new QTreeWidgetItem(mContentTree, QStringList(contentValue.title));
+                contentItem->setData(0, Qt::UserRole, idx);
                 contentItems.append(contentItem);
-                parentUrl = std::move(url);
+                parentUrl = contentValue.url;
             }
             else {
                 if (!contentItems.isEmpty()) {
-                    QTreeWidgetItem* subContentItem = new QTreeWidgetItem(contentItem, QStringList(title));
+                    QTreeWidgetItem* subContentItem = new QTreeWidgetItem(contentItem, QStringList(contentValue.title));
+                    subContentItem->setData(0, Qt::UserRole, idx);
                     contentItems.append(subContentItem);
                 }
             }
@@ -412,13 +415,14 @@ void MainWindow::contentControl(bool show) {
 }
 
 void MainWindow::contentItemClick(QTreeWidgetItem* item, int column) {
-    QString title = item->text(0);
     QUrl url;
+    unsigned int idx = item->data(0, Qt::UserRole).toUInt();
 
     auto contentMap = mEpubDocument->contentMap();
+
     for (const auto& i : contentMap) {
-        if (i.first.compare(title, Qt::CaseInsensitive) == 0) {
-            url = "file://" + i.second;
+        if (idx == i.first) {
+            url = "file://" + i.second.url;
             break;
         }
     }

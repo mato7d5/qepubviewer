@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2015 by Martin Mancuska                                 *
+ *   Copyright (C) 2015 - 2017 by Martin Mancuska                          *
  *   <martin@borg.sk>                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -73,12 +73,14 @@ void EpubDocument::extractContent() {
     titerator* tit = epub_get_titerator(mEpub, TITERATOR_NAVMAP, 0);
 
     if (tit != nullptr) {
+        unsigned int idx = 0;
         do {
             QString title = epub_tit_get_curr_label(tit);
             QString url = epub_tit_get_curr_link(tit);
 
-            std::pair<QString, QString> item(title, url);
-            mContentMap.push_back(item);
+            std::pair<unsigned int, ContentMapValue> item(idx, {title, url});
+            mContentMap.push_back(std::move(item));
+            ++idx;
 
         } while (epub_tit_next(tit));
 

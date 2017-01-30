@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2015 by Martin Mancuska                                 *
+ *   Copyright (C) 2015 - 2017 by Martin Mancuska                          *
  *   <martin@borg.sk>                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -27,7 +27,12 @@
 #include <vector>
 #include "epubpage.h"
 
-using ContentMap = std::vector<std::pair<QString, QString> >;
+struct ContentMapValue{
+    QString title;
+    QString url;
+};
+
+using ContentMap = std::vector<std::pair<unsigned int, ContentMapValue> >;
 
 class EpubDocument : public QObject
 {
